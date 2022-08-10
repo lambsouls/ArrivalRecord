@@ -1,0 +1,164 @@
+<script type="text/javascript">
+//localStorage.clear();//初始化
+var projectNo = getQueryVariable('projectNo');
+var timestamp = Date.parse(new Date());
+var d = new Date(new Date().getTime());
+var d1 = d.getFullYear();var d2 = d.getMonth()+1;var d3 = d.getDate();
+var dx = d1+"-"+d2+"-"+d3;
+//alert(dx);
+//alert(projectNo);
+if(projectNo==''){
+    try{
+        //alert('事件目录');
+        document.write('<h1>到货计划目录</h1>');
+        document.write('<h1 style="font-size:10px;font-weight:normal">时间: '+dx+'</h1><br>');
+        //添加新事件
+        document.write('<h1 style="font-size:15px">添加新的到货计划</h1>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">计划名:</h1>');
+        document.write('<input id="input1" type="text"/><br>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">计划到货量:</h1>');
+        document.write('<input id="input2" type="text" style="width:50px"/>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">吨</h1><br>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">最晚到货日期:</h1>');
+        document.write('<input id="input3" type="text" style="width:50px"/>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">年</h1>');
+        document.write('<input id="input4" type="text" style="width:25px"/>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">月</h1>');
+        document.write('<input id="input5" type="text" style="width:25px"/>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">日</h1><br>');
+        document.write('<h1 style="font-size:10px;display:inline">请点添加前仔细检查</h1><br>');
+        document.write('<a href="javascript:buildNewEvent();">添加</a><br><br><br>');
+
+        var keys = localStorage.getItem('datas');
+        //alert(keys);
+        if (keys != null){
+            //document.write('<h1 style="font-size:10px;display:inline">'+keys+'</h1><br>');
+            keys1 = keys.split("*");
+            for (var i=keys1.length;i>0;i-=1)
+            { 
+                try{
+                    var idA = localStorage.getItem(keys1[i]+'A').split("*");
+                    document.write('<a href="?projectNo='+keys1[i]+'" style="font-size:20px;display:inline">'+idA[0]+'</a><br>');
+                    document.write('<h1 style="font-size:10px;display:inline;font-weight:normal">计划编号:'+keys1[i]+'</h1><br>');
+                    document.write('<h1 style="font-size:10px;display:inline;font-weight:normal">最晚到货时间:'+idA[2]+'年'+idA[3]+'月'+idA[4]+'日'+'</h1><br>');
+                    document.write('<h1 style="font-size:10px;display:inline;font-weight:normal">计划到货量:'+idA[1]+'吨</h1><br>');
+                    document.write('<br><br>');}
+                catch(err) {
+                    console.log("Try输出er.message:"+err.message);
+                }
+            }
+        }
+    }
+    catch(err) {
+        console.log("Try输出er.message:"+err.message);
+    }
+}
+if(projectNo!=''){
+    try{
+        var idA = localStorage.getItem(projectNo +'A').split("*");
+        document.write('<h1 style="font-size:30px;display:inline">'+idA[0]+'</h1><br><br>');
+        document.write('<h1 style="font-size:15px;display:inline">计划信息:</h1><br>');
+        document.write('<h1 style="font-size:10px;display:inline;font-weight:normal">计划编号:'+projectNo+'</h1><br>');
+        document.write('<h1 style="font-size:10px;display:inline;font-weight:normal">最晚到货时间:'+idA[2]+'年'+idA[3]+'月'+idA[4]+'日'+'</h1><br>');
+        document.write('<h1 style="font-size:10px;display:inline;font-weight:normal">计划到货量:'+idA[1]+'吨</h1><br><br>');
+        var urlx = window.location.href.split("?");
+        document.write('<a href="'+urlx[0]+'" style="font-size:15px;display:inline">返回到货计划目录</a><br>');
+        document.write('<br>');
+
+        document.write('<h1 style="font-size:15px">添加到货记录</h1>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">到货量:</h1>');
+        document.write('<input id="input1" type="text" style="width:50px"/>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">吨</h1><br>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">到货日期:</h1>');
+        document.write('<input id="input2" type="text" style="width:50px"/>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">年</h1>');
+        document.write('<input id="input3" type="text" style="width:25px"/>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">月</h1>');
+        document.write('<input id="input4" type="text" style="width:25px"/>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">日</h1><br>');
+        document.write('<h1 style="font-size:10px;display:inline">请点添加前仔细检查</h1><br>');
+        document.write('<a href="javascript:buildNew2();">添加记录</a><br><br><br>');
+
+        var keys = localStorage.getItem(projectNo+'B');
+        //document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">'+keys+'</h1><br>');
+        if (keys != null){
+            //document.write('<h1 style="font-size:10px;display:inline">'+keys+'</h1><br>');
+            keys1 = keys.split("*");
+            for (var i=keys1.length-1;i>0;i-=1)
+            { 
+                try{
+                var idA = localStorage.getItem(keys1[i]).split("*");
+                    document.write('<h1 style="font-size:10px;display:inline">到货记录:</h1>');
+                    document.write('<h1 style="font-size:10px;display:inline;font-weight:normal">'+idA[1]+'年'+idA[2]+'月'+idA[3]+'日'+'</h1>');
+                    document.write('<h1 style="font-size:10px;display:inline;font-weight:normal">到货:'+idA[0]+'吨</h1><br>');
+                    document.write('<br>');
+                }
+                catch(err) {
+                    console.log("Try输出er.message:"+err.message);
+                }
+            }
+        }
+    }
+    catch(err) {
+        console.log("Try输出er.message:"+err.message);
+    }
+}
+//下方函数部分
+function buildNew2(){
+    var projectNo = getQueryVariable('projectNo');
+    var id1 = getNewEventNumber();
+    var input1 = document.getElementById('input1').value;
+    var input2 = document.getElementById('input2').value;
+    var input3 = document.getElementById('input3').value;
+    var input4 = document.getElementById('input4').value;
+    alert('将添加到货记录\n记录id:'+id1+'\n计划到货:'+input1+'吨\n最晚到货时间:'+input2+'-'+input3+'-'+input4+'\n点击确定刷新');
+    localStorage.setItem(projectNo+'B',localStorage.getItem(projectNo+'B')+'*'+id1);
+    localStorage.setItem(id1,input1+'*'+input2+'*'+input3+'*'+input4);
+
+    location.reload();
+}
+
+function buildNewEvent(){
+    var id1 = getNewEventNumber();
+    var input1 = document.getElementById('input1').value;
+    var input2 = document.getElementById('input2').value;
+    var input3 = document.getElementById('input3').value;
+    var input4 = document.getElementById('input4').value;
+    var input5 = document.getElementById('input5').value;
+    alert('将添加新到货计划:'+input1+'\n计划事件id:'+id1+'\n计划到货:'+input2+'吨\n最晚到货时间:'+input3+'-'+input4+'-'+input5+'\n点击确定刷新');
+
+    var keys = localStorage.getItem('datas');
+    if (keys == null){
+        localStorage.setItem('datas','*'+id1);
+    }
+    if (keys != null){
+        localStorage.setItem('datas',keys+'*'+id1);
+    }
+    localStorage.setItem(id1+'A',input1+'*'+input2+'*'+input3+'*'+input4+'*'+input5);
+    localStorage.setItem(id1+'B','');
+    location.reload();
+}
+
+function getQueryVariable(variable)//获得url的参数的函数
+{     
+    var query = window.location.search.substring(1);
+    var vars = query.split("&");
+    for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}       }
+    return(false);}
+
+function getNewEventNumber()//获得新时间编号
+{
+    var d = new Date(new Date().getTime());
+    var d1 = fix(d.getFullYear(),4);var d2 = fix(d.getMonth()+1,2);var d3 = fix(d.getDate(),2);
+    var d4 = fix(d.getHours(),2);var d5 = fix(d.getMinutes(),2);var d6 = fix(d.getSeconds(),2);
+    var dx = d1.toString() +  d2.toString() + d3.toString() + d4.toString() + d5.toString() + d6.toString();
+    return(dx);
+}
+
+function fix(num, length) //数字字符串格式化
+{
+   return ('' + num).length < length ? ((new Array(length + 1)).join('0') + num).slice(-length) : '' + num;
+}
+</script>
