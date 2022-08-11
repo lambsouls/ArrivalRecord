@@ -1,0 +1,317 @@
+<script type="text/javascript">
+document.write('<div style="float:left;width:25%;height:50px;border:1pxsolid#F00">');
+document.write('</div>');
+
+document.write('<div style="float:left;width:50%">');
+
+var projectNo = getQueryVariable('projectNo');
+var timestamp = Date.parse(new Date());
+var d = new Date(new Date().getTime());
+var d1 = d.getFullYear();var d2 = d.getMonth()+1;var d3 = d.getDate();
+var dx = d1+"-"+d2+"-"+d3;
+//alert(dx);
+//alert(projectNo);
+if(projectNo==''){
+    try{
+        //alert('事件目录');
+        document.write('<h1>到货计划目录</h1>');
+        document.write('<h1 style="font-size:10px;font-weight:normal">时间: '+dx+'</h1><br>');
+        //添加新事件
+        document.write('<h1 style="font-size:15px">添加新的到货计划</h1>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">计划名:</h1>');
+        document.write('<input id="input1" type="text"/><br>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">计划到货量:</h1>');
+        document.write('<input id="input2" type="text" style="width:50px"/>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">吨</h1><br>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">最晚到货日期:</h1>');
+        document.write('<input id="input3" type="text" style="width:50px"/>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">年</h1>');
+        document.write('<input id="input4" type="text" style="width:25px"/>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">月</h1>');
+        document.write('<input id="input5" type="text" style="width:25px"/>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">日</h1><br>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">每吨单价:</h1>');
+        document.write('<input id="input6" type="text" style="width:100px"/>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">元</h1><br>');
+        document.write('<h1 style="font-size:10px;display:inline">请点添加前仔细检查</h1><br>');
+        document.write('<a href="javascript:buildNewEvent();">添加</a><br><br><br>');
+
+        var keys = localStorage.getItem('datas');
+        //alert(keys);
+        if (keys != null){
+            //document.write('<h1 style="font-size:10px;display:inline">'+keys+'</h1><br>');
+            keys1 = keys.split("*");
+            for (var i=keys1.length;i>0;i-=1)
+            { 
+                try{
+                    var idA = localStorage.getItem(keys1[i]+'A').split("*");
+                    document.write('<a href="?projectNo='+keys1[i]+'" style="font-size:20px;display:inline">'+idA[0]+'</a><br>');
+                    document.write('<h1 style="font-size:10px;display:inline;font-weight:normal">计划编号:'+keys1[i]+'</h1><br>');
+                    document.write('<h1 style="font-size:10px;display:inline;font-weight:normal">最晚到货时间:'+idA[2]+'年'+idA[3]+'月'+idA[4]+'日'+'</h1><br>');
+                    document.write('<h1 style="font-size:10px;display:inline;font-weight:normal">计划到货量:'+idA[1]+'吨</h1><br>');
+                    document.write('<h1 style="font-size:10px;display:inline;font-weight:normal">每吨单价:'+idA[5]+'元</h1><br>');
+                    document.write('<br><br>');}
+                catch(err) {
+                    console.log("Try输出er.message:"+err.message);
+                }
+            }
+        }
+    }
+    catch(err) {
+        console.log("Try输出er.message:"+err.message);
+    }
+}
+if(projectNo!=''){
+    try{
+        var idA = localStorage.getItem(projectNo +'A').split("*");
+        document.write('<h1 style="font-size:30px;display:inline">'+idA[0]+'</h1><br><br>');
+        var urlx = window.location.href.split("?");
+        document.write('<a href="'+urlx[0]+'" style="font-size:15px;display:inline">返回到货计划目录</a><br>');
+        document.write('<br>');
+        document.write('<h1 style="font-size:15px;display:inline">计划信息:</h1><br>');
+        document.write('<h1 style="font-size:10px;display:inline;font-weight:normal">计划编号:'+projectNo+'</h1><br>');
+        document.write('<h1 style="font-size:10px;display:inline;font-weight:normal">最晚到货时间:'+idA[2]+'年'+idA[3]+'月'+idA[4]+'日'+'</h1><br>');
+        document.write('<h1 style="font-size:10px;display:inline;font-weight:normal">计划到货量:'+idA[1]+'吨</h1><br>');
+        document.write('<h1 style="font-size:10px;display:inline;font-weight:normal">每吨单价:'+idA[5]+'元</h1><br><br>');
+
+        document.write('<h1 style="font-size:15px;display:inline">统计信息:</h1><br>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">今日日期:</h1>');
+
+        var tx1=fix(idA[2],4).toString()+"-"+fix(idA[3],2).toString()+"-"+fix(idA[4],2).toString();
+        console.log("最晚到货日期格式化:"+tx1);
+
+        var t = new Date(new Date().getTime());
+        tx = t.getFullYear()+'年'+(t.getMonth()+1)+'月'+t.getDate()+'日';
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">'+tx+'</h1><br><br>');
+        var tx2 = fix(t.getFullYear(),4).toString()+"-"+fix(t.getMonth()+1,2).toString()+"-"+fix(t.getDate(),2).toString();
+        console.log("实际日期格式化:"+tx2);
+        var tx3 = (Date.parse(tx2) - Date.parse(tx1))/(1*24*60*60*1000) ;
+        console.log("相差时间:"+tx3);
+
+        var arriveAll = 0;//累计到货量
+        var messageList= '';//逾期数据表 格式 : 天数1*量1|天数2*量2|天数3*量3|
+        var keys = localStorage.getItem(projectNo+'B');
+        //document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">'+keys+'</h1><br>');
+        if (keys != null){
+            //document.write('<h1 style="font-size:10px;display:inline">'+keys+'</h1><br>');
+            keys1 = keys.split("*");
+            document.write('<h1 style="font-size:10px;display:inline">到货记录:</h1><br>');
+            for (var i=keys1.length-1;i>0;i-=1)
+            { 
+                try{
+                var idB = localStorage.getItem(keys1[i]).split("*");
+                    document.write('<h1 style="font-size:10px;display:inline;font-weight:normal">'+idB[1]+'年'+idB[2]+'月'+idB[3]+'日'+'</h1>');
+                    document.write('<h1 style="font-size:10px;display:inline;font-weight:normal">到货:'+idB[0]+'吨,</h1>');
+                    arriveAll += Number(idB[0]) ;
+                    var re = timeBlance(idA[2],idA[3],idA[4],idB[1],idB[2],idB[3]);
+                    console.log(re);
+
+                    document.write('<h1 style="font-size:10px;display:inline;font-weight:normal">已逾期到达'+re+'日</h1><br>');
+
+                    messageList += (re +'*'+ idB[0] +'|');
+                    console.log(messageList);
+
+                }
+                catch(err) {
+                    console.log("Try输出er.message:"+err.message);
+                }
+            }}
+
+        if(tx3>0){
+            document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">已超过最后交货日期'+tx3+'天</h1><br>');
+        }
+
+        if(tx3<=0){
+            document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">还未到最后交货日期</h1>');
+        }
+
+        if(arriveAll>=idA[1]){
+            document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">货物已到齐</h1><br>');
+        }
+
+
+        if(arriveAll<idA[1]){
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">已到货:'+arriveAll+'吨 </h1>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">未到货:'+(Number(idA[1])-arriveAll)+'吨</h1><br>');
+        }
+
+        document.write('<br>');
+
+        //违约金统计
+        document.write('<h1 style="font-size:10px;display:inline">违约金记录:</h1><br>');
+        var money1 = 0 ;//总违约金
+        list1 = messageList.split("|");
+        for (var i=list1.length-2;i>=0;i-=1)
+            { 
+                try{console.log('i='+i);
+                    list2=list1[i].split("*");
+                    var money2days = Number(list2[0]);
+                    console.log('money2days='+money2days);
+                    var money2weights = Number(list2[1]);
+                    console.log('money2weights='+money2weights);
+                    var money2 = 0;
+                    if(money2days<=3){
+                        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">逾期'+money2days+'天 </h1>');
+                        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">'+money2weights+'吨 </h1>');
+                        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">应付违约金:0元 </h1><br>');
+                        }
+                    if(money2days>3){
+                        if(money2days<=7){
+                            money2 = (money2days*0.005*money2weights*idA[5]).toFixed(2);
+                            document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">逾期'+money2days+'天 </h1>');
+                            document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">'+money2weights+'吨 </h1>');
+                            document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">应付违约金:'+money2+'元 </h1><br>');
+                        }
+                        if(money2days>7){
+                            money2 = (0.1*money2weights*idA[5]).toFixed(2);
+                            document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">逾期'+money2days+'天 </h1>');
+                            document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">'+money2weights+'吨 </h1>');
+                            document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">视为不能交货 </h1>');
+                            document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">应付违约金:'+money2+'元 </h1><br>');
+                    }
+                }
+                money1+=Number(money2);
+                }
+                catch(err) {
+                    console.log("Try输出er.message:"+err.message);
+                }
+                }
+            if(arriveAll<idA[1]){
+                if(tx3>7){
+                    money2 = (0.1*(Number(idA[1])-arriveAll)*idA[5]).toFixed(2);
+                    money1+=Number(money2);
+                    document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">'+(Number(idA[1])-arriveAll)+'吨 </h1>');
+                    document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">至今未交货且超过7天，视为不能交货 </h1>');
+                    document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">应付违约金:'+money2+'元 </h1><br>');
+                    }
+            }
+            document.write('<h1 style="font-size:10px;display:inline">总共应付违约金:'+money1+'元 </h1><br>');
+
+        document.write('<h1 style="font-size:15px">添加到货记录</h1>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">到货量:</h1>');
+        document.write('<input id="input1" type="text" style="width:50px"/>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">吨</h1><br>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">到货日期:</h1>');
+        document.write('<input id="input2" type="text" style="width:50px"/>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">年</h1>');
+        document.write('<input id="input3" type="text" style="width:25px"/>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">月</h1>');
+        document.write('<input id="input4" type="text" style="width:25px"/>');
+        document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">日</h1><br>');
+        document.write('<h1 style="font-size:10px;display:inline">请点添加前仔细检查</h1><br>');
+        document.write('<a href="javascript:buildNew2();">添加记录</a><br><br><br>');
+
+    }
+    catch(err) {
+        console.log("Try输出er.message:"+err.message);
+    }
+}
+//下方函数部分
+function buildNew2(){
+    var projectNo = getQueryVariable('projectNo');
+    var id1 = getNewEventNumber();
+    var input1 = document.getElementById('input1').value;
+    var input2 = document.getElementById('input2').value;
+    var input3 = document.getElementById('input3').value;
+    var input4 = document.getElementById('input4').value;
+    alert('将添加到货记录\n记录id:'+id1+'\n计划到货:'+input1+'吨\n最晚到货时间:'+input2+'-'+input3+'-'+input4+'\n点击确定刷新');
+    localStorage.setItem(projectNo+'B',localStorage.getItem(projectNo+'B')+'*'+id1);
+    localStorage.setItem(id1,input1+'*'+input2+'*'+input3+'*'+input4);
+
+    location.reload();
+}
+
+function buildNewEvent(){
+    var id1 = getNewEventNumber();
+    var input1 = document.getElementById('input1').value;
+    var input2 = document.getElementById('input2').value;
+    var input3 = document.getElementById('input3').value;
+    var input4 = document.getElementById('input4').value;
+    var input5 = document.getElementById('input5').value;
+    var input6 = document.getElementById('input6').value;
+    alert('将添加新到货计划:'+input1+'\n计划事件id:'+id1+'\n计划到货:'+input2+'吨\n单价:'+input6+'元\n最晚到货时间:'+input3+'-'+input4+'-'+input5+'\n点击确定刷新');
+
+    var keys = localStorage.getItem('datas');
+    if (keys == null){
+        localStorage.setItem('datas','*'+id1);
+    }
+    if (keys != null){
+        localStorage.setItem('datas',keys+'*'+id1);
+    }
+    localStorage.setItem(id1+'A',input1+'*'+input2+'*'+input3+'*'+input4+'*'+input5+'*'+input6);
+    localStorage.setItem(id1+'B','');
+    location.reload();
+}
+
+function getQueryVariable(variable)//获得url的参数的函数
+{     
+    var query = window.location.search.substring(1);
+    var vars = query.split("&");
+    for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}       }
+    return(false);}
+
+function getNewEventNumber()//获得新时间编号
+{
+    var d = new Date(new Date().getTime());
+    var d1 = fix(d.getFullYear(),4);var d2 = fix(d.getMonth()+1,2);var d3 = fix(d.getDate(),2);
+    var d4 = fix(d.getHours(),2);var d5 = fix(d.getMinutes(),2);var d6 = fix(d.getSeconds(),2);
+    var dx = d1.toString() +  d2.toString() + d3.toString() + d4.toString() + d5.toString() + d6.toString();
+    return(dx);
+}
+
+function fix(num, length) //数字字符串格式化
+{
+   return ('' + num).length < length ? ((new Array(length + 1)).join('0') + num).slice(-length) : '' + num;
+}
+
+function timeBlance(t1a,t1b,t1c,t2a,t2b,t2c)//t1为最晚到货时间，t2为实际到货时间，格式都是年月日：20220101这样，返回逾期天数
+{
+    var t1=Number(fix(t1a,4).toString()+fix(t1b,2).toString()+fix(t1c,2).toString());
+    var t1x=fix(t1a,4).toString()+"-"+fix(t1b,2).toString()+"-"+fix(t1c,2).toString();
+    console.log("t1:"+t1);
+    console.log("t1x:"+t1x);
+
+    var t2=Number(fix(t2a,4).toString()+fix(t2b,2).toString()+fix(t2c,2).toString());
+    var t2x=fix(t2a,4).toString()+"-"+fix(t2b,2).toString()+"-"+fix(t2c,2).toString();
+    console.log("t2:"+t2);
+    console.log("t2x:"+t2x);
+
+    var t = new Date(new Date().getTime());
+    var t3 = Number(fix(t.getFullYear(),4).toString()+fix(t.getMonth()+1,2).toString()+fix(t.getDate(),2).toString());
+    var t3x = fix(t.getFullYear(),4).toString()+"-"+fix(t.getMonth()+1,2).toString()+"-"+fix(t.getDate(),2).toString();
+    console.log("t3:"+t3);
+    console.log("t3x:"+t3x);
+
+    if(t1>=t2){
+        return(0);
+    }
+    else if(t2>t1){
+        console.log("t1x:"+Date.parse(t1x));
+        console.log("t2x:"+Date.parse(t2x));
+        var re = (Date.parse(t2x) - Date.parse(t1x))/(1*24*60*60*1000) ;
+        console.log("re:"+re);
+
+        return(re);
+    } 
+}
+
+function clearall(){ //初始化
+    localStorage.clear();
+    location.reload();
+}
+
+
+document.write('<a href="javascript:clearall();">格式化</a><br><br><br>');
+
+document.write('<br>');
+
+document.write('<div style="float:left;width:5%;height:50px;border:1pxsolid#F00">');
+document.write('</div>');
+
+document.write('</div>');
+
+document.write('</div>');
+document.write('<div style="float:left;width:25%;height:50px;border:1pxsolid#F00">');
+</script>
