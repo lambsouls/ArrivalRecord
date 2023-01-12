@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    &nbsp;&nbsp;<a style="font-size:13px;display:inline" href="index2.html">返回上页</a><br><br>
+    <script>
+        url = window.location.href;
+        //alert(url);
+        list1 = url.split('?id=');
+        //alert(list1[1]);
+        var ipcRenderer = require('electron').ipcRenderer;
+        ipcRenderer.send('ipc-message-index3',list1[1]);
+        ipcRenderer.on('ipc-message-back', function(event, arg) {
+            list1 = arg.split('\n');
+            document.write('<title>到货记录</title>');
+            document.write('<h1 style="font-size:15px">&nbsp;&nbsp;到货计划'+list1[0]+':'+'</h1>');
+            document.write('<h1 style="font-size:12px">&nbsp;&nbsp;'+list1[1]+' 到货记录</h1>');
+            document.write('&nbsp;&nbsp;<a style="font-size:13px;display:inline" href="index3.html?id='+list1[0]+'">返回上页</a><br><br>');
+            list1length=list1.length;
+            for(i=6;i<list1length;i++){
+                list2 = list1[i].split('|');
+                days = Number((Date.parse(list2[0])-Date.parse(list1[4]))/(1*24*60*60*1000));
+                days = Number(Math.ceil(days));
+                if(days<=0){
+                    document.write('<h1 style="font-size:13px;font-weight:normal;display:inline">&nbsp;&nbsp;'+list2[0]+'到货'+list2[1]+'吨 未逾期</h1><br>');
+                }else if(days<=3){
+                    document.write('<h1 style="font-size:13px;font-weight:normal;display:inline">&nbsp;&nbsp;'+list2[0]+'到货'+list2[1]+'吨 逾期未超过3日，没有罚款</h1><br>');
+                }else if(days<=7){
+                    var fa = 0.005*days*Number(list2[1])*Number(list1[5]);
+                    document.write('<h1 style="font-size:13px;font-weight:normal;display:inline">&nbsp;&nbsp;'+list2[0]+'到货'+list2[1]+'吨 逾期'+days+'日，罚款'+fa+'元</h1><br>');
+                }else{
+                    var fa = 0.1*Number(list2[1])*Number(list1[5]);
+                    document.write('<h1 style="font-size:13px;font-weight:normal;display:inline">&nbsp;&nbsp;'+list2[0]+'到货'+list2[1]+'吨 逾期'+days+'日，罚款'+fa+'元</h1><br>');
+                }
+            }
+        })
+    </script>
+</body>
+</html>

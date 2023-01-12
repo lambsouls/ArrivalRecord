@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>添加新到货计划</title>
+</head>
+<body>
+    <h1 style="font-size:15px">&nbsp;&nbsp;添加新到货计划</h1>
+    &nbsp;&nbsp;<a style="font-size:13px;display:inline" href="index.html">返回首页</a><br><br>
+    <h1 style="font-size:13px;font-weight:normal;display:inline">&nbsp;&nbsp;计划名:</h1>
+    <input id="input1" type="text"/><br>
+    <h1 style="font-size:13px;font-weight:normal;display:inline">&nbsp;&nbsp;计划到货量:</h1>
+    <input id="input2" type="text" style="width:50px"/>
+    <h1 style="font-size:13px;font-weight:normal;display:inline">吨</h1><br>
+    <h1 style="font-size:13px;font-weight:normal;display:inline">&nbsp;&nbsp;最晚到货日期:</h1>
+    <input id="input3" type="text" style="width:50px"/>
+    <h1 style="font-size:13px;font-weight:normal;display:inline">年</h1>
+    <input id="input4" type="text" style="width:25px"/>
+    <h1 style="font-size:13px;font-weight:normal;display:inline">月</h1>
+    <input id="input5" type="text" style="width:25px"/>
+    <h1 style="font-size:13px;font-weight:normal;display:inline">日</h1><br>
+    <h1 style="font-size:13px;font-weight:normal;display:inline">&nbsp;&nbsp;每吨单价:</h1>
+    <input id="input6" type="text" style="width:100px"/>
+    <h1 style="font-size:13px;font-weight:normal;display:inline">元</h1><br>
+    <h1 style="font-size:13px;display:inline">&nbsp;&nbsp;请点添加前仔细检查</h1><br>
+    &nbsp;&nbsp;<a style="font-size:13px;display:inline" href="javascript:buildNewEvent();">添加</a><br><br><br>
+    <script>
+        var ipcRenderer = require('electron').ipcRenderer;
+        ipcRenderer.send('ipc-message','index2'); 
+        function buildNewEvent(){
+            var input1 = document.getElementById('input1').value;
+            var input2 = document.getElementById('input2').value;
+            var input3 = document.getElementById('input3').value;
+            var input4 = document.getElementById('input4').value;
+            var input5 = document.getElementById('input5').value;
+            var input6 = document.getElementById('input6').value;
+            ipcRenderer.send('ipc-message','index2-updata'); 
+            ipcRenderer.send('ipc-message1',input1); 
+            ipcRenderer.send('ipc-message2',input2); 
+            ipcRenderer.send('ipc-message3',input3); 
+            ipcRenderer.send('ipc-message4',input4); 
+            ipcRenderer.send('ipc-message5',input5); 
+            ipcRenderer.send('ipc-message6',input6); 
+            window.location.replace('./index1.html') ;
+        }
+    </script>
+</body>
+</html>

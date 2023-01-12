@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>到货计划目录</title>
+</head>
+<body>
+    <script>
+        var ipcRenderer = require('electron').ipcRenderer;
+        ipcRenderer.send('ipc-message','index1');
+        ipcRenderer.on('ipc-message-back', function(event, arg) {
+            if(arg=='0'){
+                document.write('<title>到货计划目录</title>');
+                document.write('<h1 style="font-size:15px">&nbsp;&nbsp;到货计划目录</h1>');
+                document.write('&nbsp;&nbsp;<a style="font-size:13px;display:inline" href="index.html">返回首页</a><br><br>');
+            }
+            list1 = arg.split('\n');
+            document.write('&nbsp;&nbsp;<a style="font-size:13px;display:inline" href="index3.html?id='+list1[0]+'">'+list1[1]+'</a><br>');
+            document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">&nbsp;&nbsp;到货计划编号:'+list1[0]+'</h1><br>');
+            document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">&nbsp;&nbsp;计划到货: '+list1[2]+' 吨</h1><br>');
+            document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">&nbsp;&nbsp;计划记录日期: '+list1[3]+'</h1><br>');
+            document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">&nbsp;&nbsp;最晚到货日期: '+list1[4]+'</h1><br>');
+            document.write('<h1 style="font-size:10px;font-weight:normal;display:inline">&nbsp;&nbsp;每吨单价: '+list1[5]+' 元</h1><br><br>');
+        })
+    </script>
+</body>
+</html>
